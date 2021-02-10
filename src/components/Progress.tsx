@@ -1,4 +1,5 @@
-import React, { HTMLProps } from 'react'
+import React, { HTMLProps, useState } from 'react'
+import ReactVisibilitySensor from 'react-visibility-sensor'
 import styled, { CSSProperties } from 'styled-components'
 
 const Track = styled.div`
@@ -12,7 +13,7 @@ const Bar = styled.div`
   position: relative;
   height: 100%;
   width: 0;
-  transition: all 0.3s;
+  transition: all 0.5s;
 `
 
 export interface ProgressData extends HTMLProps<HTMLDivElement> {
@@ -33,15 +34,19 @@ export function Progress({
   const minimum = min || 0
   const maximum = max || 1
   const percent =
-    typeof value === 'number' ? `${value / (maximum - minimum)}%` : value
+    // eslint-disable-next-line prettier/prettier
+    (typeof value === 'number' ? `${value / (maximum - minimum)}%` : value) || "0"
+  const [state, setState] = useState('0%')
   console.log(percent)
   const progress: CSSProperties = {
-    width: percent,
+    width: state,
     background: look || '#06F'
   }
   return (
-    <Track {...[style, className]}>
-      <Bar style={progress} />
-    </Track>
+    <ReactVisibilitySensor onChange={() => setState(percent)}>
+      <Track style={style} className={className}>
+        <Bar style={progress} />
+      </Track>
+    </ReactVisibilitySensor>
   )
 }
