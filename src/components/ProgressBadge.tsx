@@ -1,24 +1,31 @@
 import React from 'react'
-import styled, { CSSProperties } from 'styled-components'
+import styled from 'styled-components'
 import { Progress, ProgressData } from './Progress'
 
 const Badge = styled.div`
   position: relative;
-  font-size: 1.75em;
-  font-weight: 700;
   border-radius: 10px;
-  width: 10em;
+  width: 15em;
   overflow: hidden;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 `
 
+const Box = styled.div`
+  padding: 1em;
+`
+
 const Bar = styled(Progress)`
+  position: relative;
   width: 100%;
+  height: 10px;
 `
 
 const Title = styled.p`
-  margin: 0.5em;
+  display: table-cell;
   vertical-align: middle;
+  font-size: 1.75em;
+  font-weight: 700;
+  padding-bottom: 0.5em;
 `
 
 export interface ProgressBadgeData extends ProgressData {
@@ -36,18 +43,26 @@ export function ProgressBadge({
   double,
   barThickness,
   style,
-  className
+  className,
+  children
 }: ProgressBadgeData) {
-  const bar: CSSProperties = {
-    height: barThickness || '6px'
+  const props = {
+    min: min,
+    max: max,
+    value: value,
+    look: look,
+    style: {
+      height: barThickness
+    }
   }
   return (
-    <Badge style={style} className={className}>
-      <Bar style={bar} min={min} max={max} value={value} look={look} />
-      <Title>{text}</Title>
-      {double ? (
-        <Bar style={bar} min={min} max={max} value={value} look={look} />
-      ) : undefined}
+    <Badge {...{ style: style, className: className }}>
+      <Bar {...props} />
+      <Box>
+        <Title>{text}</Title>
+        {children}
+      </Box>
+      {double ? <Bar {...props} /> : undefined}
     </Badge>
   )
 }
