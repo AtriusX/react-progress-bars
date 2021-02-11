@@ -34,8 +34,8 @@ export function Progress({
   const minimum = min || 0
   const maximum = max || 1
   const percent =
-    // eslint-disable-next-line prettier/prettier
-    (typeof value === 'number' ? `${value / (maximum - minimum)}%` : value) || "0"
+    (typeof value === 'number' ? `${value / (maximum - minimum)}%` : value) ||
+    '0'
   const [state, setState] = useState('0%')
   console.log(percent)
   const progress: CSSProperties = {
@@ -43,7 +43,11 @@ export function Progress({
     background: look || '#06F'
   }
   return (
-    <ReactVisibilitySensor onChange={() => setState(percent)}>
+    <ReactVisibilitySensor
+      onChange={(v) => {
+        if (v) setState(percent)
+      }}
+    >
       <Track style={style} className={className}>
         <Bar style={progress} />
       </Track>
