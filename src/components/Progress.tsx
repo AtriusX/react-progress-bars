@@ -7,6 +7,7 @@ const Track = styled.div`
   background: #333;
   height: 0.5em;
   width: 15%;
+  overflow: hidden;
 `
 
 const Bar = styled.div`
@@ -17,10 +18,11 @@ const Bar = styled.div`
 `
 
 export interface ProgressData extends HTMLProps<HTMLDivElement> {
-  min?: number
-  max?: number
+  min?: number | string
+  max?: number | string
   value?: number | string
   look?: string
+  rounded?: boolean
 }
 
 export function Progress({
@@ -28,16 +30,20 @@ export function Progress({
   max,
   value,
   look,
+  rounded,
   style,
   className
 }: ProgressData) {
-  const minimum = min || 0
-  const maximum = max || 1
+  const minimum = typeof min === 'string' ? parseFloat(min) : min || 0
+  const maximum = typeof max === 'string' ? parseFloat(max) : max || 1
   const percent =
-    (typeof value === 'number' ? `${value / (maximum - minimum)}%` : value) ||
-    '0'
+    (typeof value === 'number'
+      ? `${Math.min(100, ((value - minimum) / maximum) * 100)}%` // Prevent the bar from overflowing past 100%
+      : value) || '0'
   const [state, setState] = useState('0%')
-  console.log(percent)
+  console.log(value, percent);
+
+  const round = rounded ? '50px' : undefined
   const progress: CSSProperties = {
     width: state,
     background: look || '#06F'
@@ -48,7 +54,7 @@ export function Progress({
         if (v) setState(percent)
       }}
     >
-      <Track style={style} className={className}>
+      <Track style={{ ...style, borderRadius: round }} className={className}>
         <Bar style={progress} />
       </Track>
     </ReactVisibilitySensor>
