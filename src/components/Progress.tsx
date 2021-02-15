@@ -41,8 +41,6 @@ export function Progress({
       ? `${Math.min(100, ((value - minimum) / maximum) * 100)}%` // Prevent the bar from overflowing past 100%
       : value) || '0'
   const [state, setState] = useState('0%')
-  console.log(value, percent);
-
   const round = rounded ? '50px' : undefined
   const progress: CSSProperties = {
     width: state,
