@@ -14,11 +14,13 @@ const Indicator = styled.text`
   transform: translateY(2%);
 `
 
+type Rotation = 45 | 90 | 135 | 180 | 225 | 270 | 315 | 360 | number
+
 type Size = 100 | 75 | 50 | 25 | number
 
 interface CircleData extends SVGProps<SVGCircleElement> {
-  rotation?: number
-  barSize?: number
+  rotation?: Rotation
+  barSize?: Size
   circumference: number
   width?: number
   rounded?: boolean
@@ -36,7 +38,7 @@ interface RadialProgressData extends ProgressData {
   max?: number
   width?: number
   value?: number
-  rotation?: number
+  rotation?: Rotation
   barSize?: Size
   rounded?: boolean
   radius?: number
