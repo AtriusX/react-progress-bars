@@ -21,7 +21,7 @@ const App = () => {
   //   Hello world!
   // </Badge>
   // return <Badge max={20} value={530} rounded />
-  return <Badge barSize={25} value={50} label="HELLwO WORLD" radius={100} width={15} rotation={45} />
+  return <Badge showValue barSize={75} value={50} radius={100} width={15} rotation={45} />
 }
 
 export default App

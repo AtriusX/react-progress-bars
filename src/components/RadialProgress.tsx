@@ -1,22 +1,20 @@
-// eslint-disable-next-line no-use-before-define
 import React, { SVGProps, useState } from 'react'
 import ReactVisibilitySensor from 'react-visibility-sensor'
 import styled from 'styled-components'
 import { ProgressData } from './Progress'
 
-type Size = 100 | 50 | 25
-
-const Container = styled.div`
+const Indicator = styled.text`
   position: relative;
-  width: fit-content;
-`
-const Label = styled.p`
-  position: relative;
-  width: 100%;
   text-align: center;
-  font-weight: 600;
-  margin-top: 0;
+  width: 100%;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 700;
+  font-size: 2em;
+  transform: translateY(2%);
 `
+
+type Size = 100 | 75 | 50 | 25 | number
 
 interface CircleData extends SVGProps<SVGCircleElement> {
   rotation?: number
@@ -38,11 +36,12 @@ interface RadialProgressData extends ProgressData {
   max?: number
   width?: number
   value?: number
-  label?: string
   rotation?: number
   barSize?: Size
   rounded?: boolean
   radius?: number
+  showValue?: boolean
+  filled?: boolean
 }
 
 export function RadialProgress(props: RadialProgressData) {
@@ -52,8 +51,9 @@ export function RadialProgress(props: RadialProgressData) {
     radius,
     width,
     rotation,
-    label,
     rounded,
+    showValue,
+    filled,
     className,
     style
   } = props
@@ -78,31 +78,42 @@ export function RadialProgress(props: RadialProgressData) {
     rotation: rotation,
     barSize: barSize,
     rounded: rounded,
+    showValue: showValue,
     ...circleData
   }
   // Dynamic track element
   const ProgressTrack = Track(data)
   return (
-    <Container className={className} style={style}>
-      <ReactVisibilitySensor
-        partialVisibility
-        onChange={(v) => {
-          if (v)
-            setProgress(
-              getPercentage(
-                circumference,
-                ((barSize || 100) / 100) * (value || 0)
-              )
+    <ReactVisibilitySensor
+      partialVisibility
+      onChange={(v) => {
+        if (v)
+          setProgress(
+            getPercentage(
+              circumference,
+              ((barSize || 100) / 100) * (value || 0)
             )
-        }}
+          )
+      }}
+    >
+      <svg
+        className={className}
+        style={style}
+        height={diameter}
+        width={diameter}
       >
-        <svg height={diameter} width={diameter}>
-          <ProgressTrack {...circleData} />
-          <Progress {...data} />
-        </svg>
-      </ReactVisibilitySensor>
-      <Label>{label}</Label>
-    </Container>
+        <ProgressTrack
+          {...circleData}
+          fill={filled ? '#454545' : 'transparent'}
+        />
+        <Progress {...data} />
+        {showValue ? (
+          <Indicator x='50%' y='50%' fill={filled ? 'white' : 'black'}>
+            {value}%
+          </Indicator>
+        ) : undefined}
+      </svg>
+    </ReactVisibilitySensor>
   )
 }
 
@@ -121,7 +132,6 @@ function Track({
     position: absolute;
     transform: rotate(${90 + (rotation || 0)}deg);
     transform-origin: 50% 50%;
-    fill: transparent;
     stroke: #333;
     stroke-dasharray: ${circumference} ${circumference};
     stroke-width: ${width || 4};
