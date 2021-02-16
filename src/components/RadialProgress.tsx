@@ -56,8 +56,7 @@ export function RadialProgress(props: RadialProgressData) {
     rounded,
     showValue,
     filled,
-    className,
-    style
+    ...others
   } = props
   // Circle data
   const rad = radius || 50
@@ -98,12 +97,7 @@ export function RadialProgress(props: RadialProgressData) {
           )
       }}
     >
-      <svg
-        className={className}
-        style={style}
-        height={diameter}
-        width={diameter}
-      >
+      <svg {...(others as object)} height={diameter} width={diameter}>
         <ProgressTrack
           {...circleData}
           fill={filled ? '#454545' : 'transparent'}
