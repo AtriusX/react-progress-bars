@@ -46,18 +46,17 @@ interface RadialProgressData extends ProgressData {
   filled?: boolean
 }
 
-export function RadialProgress(props: RadialProgressData) {
-  const {
-    value,
-    barSize,
-    radius,
-    width,
-    rotation,
-    rounded,
-    showValue,
-    filled,
-    ...others
-  } = props
+export function RadialProgress({
+  value,
+  barSize,
+  radius,
+  width,
+  rotation,
+  rounded,
+  showValue,
+  filled,
+  ...others
+}: RadialProgressData) {
   // Circle data
   const rad = radius || 50
   const diameter = rad * 2
